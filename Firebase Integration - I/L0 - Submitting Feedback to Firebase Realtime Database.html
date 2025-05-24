@@ -42,11 +42,11 @@
     </center>
 
     <h2>Register Form</h2>
-    <form action="" id="registerForm">
-        <input type="text" id="name" placeholder="Enter your name">
-        <input type="email" id="email" placeholder="Enter your Email">
-        <input type="password" id="password" placeholder="Enter password">
-        <button type="submit"> Register</button>
+    <form action="" id="userform">
+        <input type="text" id="name" placeholder="Enter your Username">
+        <textarea id="messages" rows="4" cols="20">
+        </textarea> 
+        <button type="submit"> Save</button>
     </form>
 
     <div id="message"></div>
@@ -55,41 +55,32 @@
 </html>
 
 <script>
-    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    document.getElementById('userform').addEventListener('submit', async function (e) {
         e.preventDefault()
 
         const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const messages = document.getElementById('messages').value;
         const message = document.getElementById('message');
 
         //validate inputs
-        if (!name || !email || !password) {
+        if (!name || !messages) {
             message.textContent = 'All fields are required.'
             message.className = 'error';
             return;
         }
         try {
-            const checkuser = await fetch('https://mockapi-6ab61-default-rtdb.asia-southeast1.firebasedatabase.app/users.json')
-            const existingUser = await checkuser.json();
-
-            if (existingUser.length > 0) {
-                message.textContent = 'This email is already registered.';
-                message.className = 'error';
-                return;
-            }
-            const res = await fetch('https://mockapi-6ab61-default-rtdb.asia-southeast1.firebasedatabase.app/users.json', {
+            const res = await fetch('https://feedback-3a650-default-rtdb.asia-southeast1.firebasedatabase.app/users.json', {
                 method: 'POST',
                 headers: { "Content-type": 'application/json' },
-                body: JSON.stringify({ name, email, password })
+                body: JSON.stringify({ name, messages})
             });
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(errorData.message || 'Resgistration failed');
+                throw new Error(errorData.message || 'message failed');
             }
-            message.textContent = "Registration Successfull"
+            message.textContent = "message posted Successfull"
             message.className = "success"
-            document.getElementById('registerForm').reset()
+            document.getElementById('userform').reset()
 
 
         } catch (error) {
